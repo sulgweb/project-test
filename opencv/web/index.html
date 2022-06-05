@@ -1,0 +1,68 @@
+ 
+<html>
+    <head>
+    <meta charset="utf-8">
+    <title>Hello OpenCV.js</title>
+    
+    
+    <script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+    
+    </head>
+    <body>
+    <h2>Hello OpenCV.js</h2>
+    <p id="status">OpenCV.js is loading...</p>
+    <div>
+      <div class="inputoutput" style="width: 40%; float: left;">
+        <img id="imageSrc" alt="No Image" src="test.png" style="width: 100%;" />
+        
+      </div>
+      <div class="inputoutput"  style="width: 40%; float: left; ">
+        <button onclick="check()">check</button>
+        <canvas id="canvasOutput" style="width: 100%;" ></canvas>
+        <div class="caption">canvasOutput</div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  
+    
+    let ImageContours = {
+      contours:null,
+      hierarchy:null,
+      cols:0,
+      height:0,
+  
+    }
+  
+    function onOpenCvReady() 
+    {
+      document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
+    }
+
+    function check (){
+      console.log('check')
+      let imgElement = document.getElementById('imageSrc');
+      let image = cv.imread(imgElement);
+      
+      ImageContours.cols= image.cols;
+      ImageContours.rows= image.rows;
+      console.log(image)
+      getCanny(image)
+      console.log(ImageContours)
+    }
+
+
+    function getCanny(image){
+      // 高斯模糊
+      let binary = cv.GaussianBlur(image, [3, 3], 2, 2)
+      // 边缘检测
+      binary = cv.Canny(binary, 60, 240, apertureSize=3)
+      console.log(binary)
+    }
+   
+  
+    </script>
+    </body>
+    </html>
+    
+    
+  
