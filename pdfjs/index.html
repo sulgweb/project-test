@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <h1>PDF.js</h1>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js"></script>
+
+  <script>
+    var urlPDF = './test.pdf';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+    var loadingTask = pdfjsLib.getDocument({ url: urlPDF, });//  _url为后台请求pdf流的路径
+    loadingTask.promise.then(function (pdf) {
+      pdf.getPage(1).then(function (page) {
+        /**
+         * 坑：
+         * 官网上给的例子是这样写的
+         *      var scale = 1.5;
+         *      var viewport = page.getViewport({ scale: scale, });
+         * 但是！！我们要这样写：
+         *      var scale = 1.5;
+         *      var viewport = page.getViewport(scale);
+         */
+        var scale = 1.5;
+        var viewport = page.getViewport(scale);
+        var canvas = document.getElementById('the-canvas');
+        var context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        var renderContext = {
+          canvasContext: context,
+          viewport: viewport,
+        };
+        page.render(renderContext);
+      });
+    });
+  </script>
+</body>
+
+</html>
