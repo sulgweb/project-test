@@ -1,3 +1,10 @@
+<!--
+ * @Author: xiaoyu
+ * @Description: 
+ * @Date: 2022-05-08 08:40:54
+ * @LastEditors: xiaoyu
+ * @LastEditTime: 2022-07-01 23:27:58
+-->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,47 +12,49 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+	<title>web worker</title>
 </head>
 
 <script>
-	const number = 3 // 运行次数
+	const number = 20 // 运行次数
 
 	// 多线程测试
-	function workerTest(){
+	function workerTest() {
 		console.log('%c 开始多线程测试 ', 'color:#fff; background:#00897b ')
 		const workerList = []
-		for(let i = 0;i<number;i++){
+		for (let i = 0; i < number; i++) {
 			const workerItem = new Promise((resolve, reject) => {
 				const myWorker = new Worker('worker.js')
 				myWorker.postMessage({
-					function:'fb',
-					data: 43
+					function: 'fb',
+					data: 2
 				})
 				myWorker.onmessage = (e) => {
 					resolve(e.data)
+					// 关闭worker线程
+					myWorker.terminate()
 				}
 			})
 			workerList.push(workerItem)
 		}
 		console.time('worker多线程执行时间')
-		Promise.all(workerList).then(res=>{
+		Promise.all(workerList).then(res => {
 			console.log(res)
 			console.timeEnd('worker多线程执行时间')
 		})
 	}
 
-	function singleTest(){
+	function singleTest() {
 		console.log('%c 开始单线程测试 ', 'color:#fff; background:#00897b ')
-		function  fb(n){
-			if(n===1 || n ===2){
+		function fb(n) {
+			if (n === 1 || n === 2) {
 				return 1;
 			}
-			return fb(n-1) + fb(n-2)
+			return fb(n - 1) + fb(n - 2)
 		}
 		console.time('单线程执行时间')
-		for(let i = 0;i<number;i++){
-			const res = fb(43)
+		for (let i = 0; i < number; i++) {
+			const res = fb(2)
 			console.log({
 				data: res,
 				name: 'single test'
