@@ -1,0 +1,58 @@
+<!--
+ * @Description: 
+ * @Author: xianpengfei
+ * @LastEditors: xianpengfei
+ * @Date: 2022-07-01 18:02:24
+ * @LastEditTime: 2022-07-04 20:21:21
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <script type="text/javascript">
+    // console.log(111)
+    // const env = {
+    //   memoryBase: 0,
+    //   tableBase: 0,
+    //   memory: new WebAssembly.Memory({
+    //     initial: 256,
+    //   }),
+    //   table: new WebAssembly.Table({
+    //     initial: 2,
+    //     element: 'anyfunc',
+    //   }),
+    //   abort: () => {
+    //     throw 'abort'
+    //   },
+    // }
+    // fetch('./build/index.wasm').then((res) => {
+    //   console.log(res)
+    //   let src = new Uint8Array(res)
+    //   WebAssembly.instantiate(src, { env: env })
+    //     .then((result) => {
+    //       console.log(result.instance.exports)
+    //     })
+    //     .catch((e) => console.log(e))
+    // })
+
+    const importObject = {
+      imports: {
+        imported_func: (arg) => {
+          console.log(arg)
+        },
+      },
+    }
+
+    WebAssembly.instantiateStreaming(
+      fetch('./build/index.wasm'),
+      importObject
+    ).then((obj) => {
+      obj.instance.exports.exported_func()
+    })
+  </script>
+  <body></body>
+</html>
